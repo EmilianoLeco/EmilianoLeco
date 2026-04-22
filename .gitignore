@@ -1,0 +1,31 @@
+# Firebase real credentials — never commit these
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.g.dart
+*.freezed.dart
+
+# Android
+local.properties
+*.jks
+*.keystore
+android/.gradle/
+android/app/.cxx/
+android/captures/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Environment
+.env
