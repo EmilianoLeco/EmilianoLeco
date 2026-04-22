@@ -1,0 +1,50 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../../core/models/freight.dart';
+import '../../core/services/firestore_service.dart';
+import '../location/location_service.dart';
+
+enum PublishState { idle, loading, success, error }
+
+class PublishNotifier extends Notifier<PublishState> {
+  @override
+  PublishState build() => PublishState.idle;
+
+  Future<void> publish({
+    required String title,
+    required String description,
+    required String zone,
+    required String contactPhone,
+    required int expiresInHours,
+  }) async {
+    state = PublishState.loading;
+    try {
+      final geoPoint = await LocationService.instance.currentGeoFirePoint();
+      if (geoPoint == null) throw Exception('Location permission denied');
+
+      final now = DateTime.now();
+      final freight = Freight(
+        id: const Uuid().v4(),
+        title: title,
+        description: description,
+        geoPoint: geoPoint.geopoint,
+        geohash: geoPoint.geohash,
+        zone: zone,
+        status: 'available',
+        contactPhone: contactPhone,
+        createdAt: now,
+        expiresAt: now.add(Duration(hours: expiresInHours)),
+      );
+
+      await ref.read(firestoreServiceProvider).publishFreight(freight);
+      state = PublishState.success;
+    } catch (_) {
+      state = PublishState.error;
+    }
+  }
+
+  void reset() => state = PublishState.idle;
+}
+
+final publishFreightProvider =
+    NotifierProvider<PublishNotifier, PublishState>(PublishNotifier.new);

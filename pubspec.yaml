@@ -1,0 +1,41 @@
+name: fretemap
+description: FreteMap – real-time freight/cargo locator built with Flutter and Firebase.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^3.3.0
+  cloud_firestore: ^5.2.0
+
+  # Maps
+  google_maps_flutter: ^2.7.0
+
+  # Geo queries
+  geoflutterfire_plus: ^0.0.32
+
+  # Location / permissions
+  geolocator: ^12.0.0
+  permission_handler: ^11.3.1
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Utilities
+  uuid: ^4.4.0
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
