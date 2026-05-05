@@ -1,0 +1,23 @@
+{
+  "indexes": [
+    {
+      "_comment": "Used when status filter is moved server-side (v2). Add .where('status', isEqualTo: ...) in FirestoreService.nearbyStream and remove the client-side .map() filter.",
+      "collectionGroup": "freights",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "location.geohash", "order": "ASCENDING" },
+        { "fieldPath": "status",           "order": "ASCENDING" }
+      ]
+    },
+    {
+      "_comment": "For listing freights sorted by creation date (future list/feed view)",
+      "collectionGroup": "freights",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "zone",      "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

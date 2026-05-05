@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /freights/{freightId} {
+
+      // Anyone can read (v1 - no auth)
+      allow read: true;
+
+      // Create: all required fields must be present and status must start as 'available'
+      allow create: if request.resource.data.keys().hasAll([
+                          'title', 'description', 'location', 'zone',
+                          'status', 'contactPhone', 'createdAt', 'expiresAt'
+                        ])
+                     && request.resource.data.status == 'available'
+                     && request.resource.data.title is string
+                     && request.resource.data.title.size() > 0
+                     && request.resource.data.contactPhone is string
+                     && request.resource.data.contactPhone.size() >= 10;
+
+      // Update: only the 'status' field may change (no content editing after publish)
+      allow update: if request.resource.data.diff(resource.data)
+                         .affectedKeys()
+                         .hasOnly(['status'])
+                     && request.resource.data.status in ['available', 'assigned', 'completed'];
+
+      // Hard-delete disabled; use status='completed' for soft-delete
+      allow delete: if false;
+    }
+  }
+}
