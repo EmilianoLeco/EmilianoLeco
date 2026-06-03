@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Truck icon representing freight/cargo -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Safe zone: 72dp centred (18dp padding each side) -->
+    <group android:translateX="18" android:translateY="30">
+        <!-- Truck body -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M2,8 L50,8 L50,38 L2,38 Z"/>
+        <!-- Truck cab -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M50,16 L68,16 L68,38 L50,38 Z"/>
+        <!-- Windshield -->
+        <path
+            android:fillColor="#1565C0"
+            android:pathData="M52,18 L66,18 L66,30 L52,30 Z"/>
+        <!-- Rear wheel -->
+        <path
+            android:fillColor="#424242"
+            android:pathData="M16,38 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"/>
+        <!-- Front wheel -->
+        <path
+            android:fillColor="#424242"
+            android:pathData="M56,38 m-8,0 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0"/>
+        <!-- Location pin dot -->
+        <path
+            android:fillColor="#FF5722"
+            android:pathData="M26,2 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 M32,8 L28,16 L32,14 L36,16 Z"/>
+    </group>
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launch screen background -->
+    <color name="launch_background">#1565C0</color>
+    <!-- Status bar -->
+    <color name="primaryColor">#1565C0</color>
+</resources>
