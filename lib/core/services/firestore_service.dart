@@ -36,6 +36,7 @@ class FirestoreService {
         )
         .map(
           (docs) => docs
+              .map((doc) => doc.data()!)
               .where((f) => statusFilter == null || f.status == statusFilter)
               .toList(),
         );
