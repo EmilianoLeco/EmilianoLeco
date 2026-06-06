@@ -51,10 +51,21 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
         ref.read(publishFreightProvider.notifier).reset();
         Navigator.pop(context);
       }
+      if (next == PublishState.locationError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Permiso de ubicación denegado. Habilitalo en Ajustes para publicar.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 5),
+          ),
+        );
+        ref.read(publishFreightProvider.notifier).reset();
+      }
       if (next == PublishState.error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Error al publicar. Intentá de nuevo.'),
+            content: Text('Error al publicar. Revisá tu conexión e intentá de nuevo.'),
             backgroundColor: Colors.red,
           ),
         );

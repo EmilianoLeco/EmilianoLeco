@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/models/freight.dart';
 import '../../core/services/firestore_service.dart';
 import '../location/location_service.dart';
 
-enum PublishState { idle, loading, success, error }
+enum PublishState { idle, loading, success, locationError, error }
 
 class PublishNotifier extends Notifier<PublishState> {
   @override
@@ -20,7 +22,10 @@ class PublishNotifier extends Notifier<PublishState> {
     state = PublishState.loading;
     try {
       final geoPoint = await LocationService.instance.currentGeoFirePoint();
-      if (geoPoint == null) throw Exception('Location permission denied');
+      if (geoPoint == null) {
+        state = PublishState.locationError;
+        return;
+      }
 
       final now = DateTime.now();
       final freight = Freight(
@@ -38,7 +43,8 @@ class PublishNotifier extends Notifier<PublishState> {
 
       await ref.read(firestoreServiceProvider).publishFreight(freight);
       state = PublishState.success;
-    } catch (_) {
+    } catch (e, st) {
+      log('publishFreight error: $e', stackTrace: st, name: 'PublishNotifier');
       state = PublishState.error;
     }
   }
