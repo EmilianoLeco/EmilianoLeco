@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/freight_categories.dart';
 import '../map_controller.dart';
 
 class FreightBottomSheet extends ConsumerWidget {
@@ -54,6 +55,11 @@ class FreightBottomSheet extends ConsumerWidget {
                   backgroundColor: statusColor,
                 ),
               ],
+            ),
+            const SizedBox(height: 6),
+            _CategoryBadge(
+              category: freight.category,
+              subcategory: freight.subcategory,
             ),
             const SizedBox(height: 8),
             Text(freight.description),
@@ -108,6 +114,33 @@ class FreightBottomSheet extends ConsumerWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     }
+  }
+}
+
+class _CategoryBadge extends StatelessWidget {
+  const _CategoryBadge({required this.category, required this.subcategory});
+  final String category;
+  final String subcategory;
+
+  @override
+  Widget build(BuildContext context) {
+    final type = freightTypeById(category);
+    final sub = freightSubtypeById(category, subcategory);
+    if (type == null) return const SizedBox.shrink();
+    return Row(
+      children: [
+        Icon(type.icon, size: 14, color: type.color),
+        const SizedBox(width: 4),
+        Text(
+          sub != null ? '${type.label} · ${sub.label}' : type.label,
+          style: TextStyle(
+            fontSize: 12,
+            color: type.color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
   }
 }
 

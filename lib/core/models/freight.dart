@@ -8,6 +8,8 @@ class Freight {
     required this.geoPoint,
     required this.geohash,
     required this.zone,
+    required this.category,
+    required this.subcategory,
     required this.status,
     required this.contactPhone,
     required this.createdAt,
@@ -20,7 +22,9 @@ class Freight {
   final GeoPoint geoPoint;
   final String geohash;
   final String zone;
-  final String status; // 'available' | 'assigned' | 'completed'
+  final String category;    // e.g. 'mudanza'
+  final String subcategory; // e.g. 'casa'
+  final String status;      // 'available' | 'assigned' | 'completed'
   final String contactPhone;
   final DateTime createdAt;
   final DateTime expiresAt;
@@ -38,6 +42,8 @@ class Freight {
       geoPoint: loc['geopoint'] as GeoPoint,
       geohash: loc['geohash'] as String,
       zone: data['zone'] as String,
+      category: data['category'] as String? ?? 'materiales',
+      subcategory: data['subcategory'] as String? ?? 'mercaderia_general',
       status: data['status'] as String,
       contactPhone: data['contactPhone'] as String,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -54,6 +60,8 @@ class Freight {
           'geohash': geohash,
         },
         'zone': zone,
+        'category': category,
+        'subcategory': subcategory,
         'status': status,
         'contactPhone': contactPhone,
         'createdAt': Timestamp.fromDate(createdAt),
@@ -67,6 +75,8 @@ class Freight {
         geoPoint: geoPoint,
         geohash: geohash,
         zone: zone,
+        category: category,
+        subcategory: subcategory,
         status: status ?? this.status,
         contactPhone: contactPhone,
         createdAt: createdAt,

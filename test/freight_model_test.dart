@@ -11,6 +11,8 @@ void main() {
       geoPoint: const GeoPoint(-34.6037, -58.3816),
       geohash: '69y7pd',
       zone: 'Palermo',
+      category: 'mudanza',
+      subcategory: 'casa',
       status: 'available',
       contactPhone: '1123456789',
       createdAt: DateTime(2024, 1, 1),
@@ -40,6 +42,7 @@ void main() {
       final map = freight.toFirestore();
       for (final key in [
         'title', 'description', 'location', 'zone',
+        'category', 'subcategory',
         'status', 'contactPhone', 'createdAt', 'expiresAt',
       ]) {
         expect(map.containsKey(key), isTrue, reason: 'Missing key: $key');

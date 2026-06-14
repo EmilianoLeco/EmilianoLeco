@@ -16,6 +16,8 @@ class PublishNotifier extends Notifier<PublishState> {
     required String title,
     required String description,
     required String zone,
+    required String category,
+    required String subcategory,
     required String contactPhone,
     required int expiresInHours,
   }) async {
@@ -31,6 +33,8 @@ class PublishNotifier extends Notifier<PublishState> {
         geoPoint: geoPoint.geopoint,
         geohash: geoPoint.geohash,
         zone: zone,
+        category: category,
+        subcategory: subcategory,
         status: 'available',
         contactPhone: contactPhone,
         createdAt: now,

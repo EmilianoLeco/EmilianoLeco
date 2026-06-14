@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/models/freight.dart';
 import '../../core/providers/connectivity_provider.dart';
-import '../freight/publish_freight_screen.dart';
+import '../freight/category_selection_screen.dart';
 import '../location/location_service.dart';
 import 'map_controller.dart';
 import 'widgets/freight_bottom_sheet.dart';
@@ -186,7 +186,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => const PublishFreightScreen(),
+            builder: (_) => const CategorySelectionScreen(),
           ),
         ),
         icon: const Icon(Icons.add),

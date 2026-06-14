@@ -5,7 +5,22 @@ import '../../core/constants/argentina_zones.dart';
 import 'publish_freight_controller.dart';
 
 class PublishFreightScreen extends ConsumerStatefulWidget {
-  const PublishFreightScreen({super.key});
+  const PublishFreightScreen({
+    super.key,
+    required this.category,
+    required this.subcategory,
+    required this.categoryLabel,
+    required this.subtypeLabel,
+    required this.categoryColor,
+    required this.categoryIcon,
+  });
+
+  final String category;
+  final String subcategory;
+  final String categoryLabel;
+  final String subtypeLabel;
+  final Color categoryColor;
+  final IconData categoryIcon;
 
   @override
   ConsumerState<PublishFreightScreen> createState() =>
@@ -36,6 +51,8 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
           title: _titleCtrl.text.trim(),
           description: _descCtrl.text.trim(),
           zone: _selectedBarrio!,
+          category: widget.category,
+          subcategory: widget.subcategory,
           contactPhone: _phoneCtrl.text.trim(),
           expiresInHours: _expiresHours,
         );
@@ -52,7 +69,8 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
           const SnackBar(content: Text('Flete publicado exitosamente!')),
         );
         ref.read(publishFreightProvider.notifier).reset();
-        Navigator.pop(context);
+        // Volver al mapa (pop x3: form → subtype → category)
+        Navigator.of(context).popUntil((r) => r.isFirst);
       }
       if (next == PublishState.locationError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +86,8 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
       if (next == PublishState.error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Error al publicar. Revisá tu conexión e intentá de nuevo.'),
+            content:
+                Text('Error al publicar. Revisá tu conexión e intentá de nuevo.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -87,28 +106,63 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Badge de categoría seleccionada
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: widget.categoryColor.withValues(alpha: 0.1),
+                  border: Border.all(
+                      color: widget.categoryColor.withValues(alpha: 0.4)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(widget.categoryIcon,
+                        size: 18, color: widget.categoryColor),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${widget.categoryLabel} · ${widget.subtypeLabel}',
+                      style: TextStyle(
+                        color: widget.categoryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _titleCtrl,
-                decoration: const InputDecoration(labelText: 'Título *'),
+                decoration: const InputDecoration(
+                  labelText: 'Título *',
+                  hintText: 'Ej: Mudanza de 3 ambientes en Palermo',
+                ),
                 validator: (v) =>
                     v == null || v.isEmpty ? 'Ingresá el título' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descCtrl,
-                decoration: const InputDecoration(labelText: 'Descripción *'),
-                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Descripción *',
+                  hintText:
+                      'Detallá peso, volumen, pisos, si hay ascensor, etc.',
+                ),
+                maxLines: 4,
                 validator: (v) =>
                     v == null || v.isEmpty ? 'Ingresá la descripción' : null,
               ),
               const SizedBox(height: 16),
-              const Text('Zona del flete',
+              const Text('Zona de origen',
                   style: TextStyle(fontSize: 12, color: Colors.grey)),
               const SizedBox(height: 8),
-              // Province selector
               DropdownButtonFormField<String>(
                 value: _selectedProvince,
-                decoration: const InputDecoration(labelText: 'Provincia / Región'),
+                decoration:
+                    const InputDecoration(labelText: 'Provincia / Región'),
                 items: argentinaZones.keys
                     .map((p) => DropdownMenuItem(value: p, child: Text(p)))
                     .toList(),
@@ -118,21 +172,23 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
                 }),
               ),
               const SizedBox(height: 12),
-              // Barrio selector
               DropdownButtonFormField<String>(
                 value: _selectedBarrio,
-                decoration: const InputDecoration(labelText: 'Barrio / Localidad *'),
+                decoration: const InputDecoration(
+                    labelText: 'Barrio / Localidad de origen *'),
                 items: barrios
                     .map((b) => DropdownMenuItem(value: b, child: Text(b)))
                     .toList(),
                 onChanged: (v) => setState(() => _selectedBarrio = v),
-                validator: (v) => v == null ? 'Seleccioná un barrio' : null,
+                validator: (v) => v == null ? 'Seleccioná el barrio de origen' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _phoneCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Teléfono de contacto *'),
+                decoration: const InputDecoration(
+                  labelText: 'Teléfono de contacto *',
+                  hintText: 'Ej: 1123456789',
+                ),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (v) =>
@@ -153,12 +209,17 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                height: 48,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _submit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.categoryColor,
+                    foregroundColor: Colors.white,
+                  ),
                   child: isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Publicar'),
+                      : const Text('Publicar flete',
+                          style: TextStyle(fontSize: 16)),
                 ),
               ),
             ],
