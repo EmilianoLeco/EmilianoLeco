@@ -19,11 +19,12 @@ class FirestoreService {
   final CollectionReference<Freight> _freights;
 
   /// Real-time stream of freight within [radiusKm] of [center].
-  /// Status filtering is done client-side to avoid a composite Firestore index in v1.
+  /// Status and zone filtering are client-side to avoid composite Firestore indexes in v1.
   Stream<List<Freight>> nearbyStream({
     required GeoFirePoint center,
     required double radiusKm,
     String? statusFilter,
+    String? zoneFilter,
   }) {
     final geoRef = GeoCollectionReference<Freight>(_freights);
     return geoRef
@@ -38,6 +39,8 @@ class FirestoreService {
           (docs) => docs
               .map((doc) => doc.data()!)
               .where((f) => statusFilter == null || f.status == statusFilter)
+              .where((f) => zoneFilter == null ||
+                  f.zone.toLowerCase() == zoneFilter.toLowerCase())
               .toList(),
         );
   }

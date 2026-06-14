@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/constants/argentina_zones.dart';
 import 'publish_freight_controller.dart';
 
 class PublishFreightScreen extends ConsumerStatefulWidget {
@@ -15,15 +16,16 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
-  final _zoneCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   int _expiresHours = 24;
+
+  String _selectedProvince = argentinaZones.keys.first;
+  String? _selectedBarrio;
 
   @override
   void dispose() {
     _titleCtrl.dispose();
     _descCtrl.dispose();
-    _zoneCtrl.dispose();
     _phoneCtrl.dispose();
     super.dispose();
   }
@@ -33,7 +35,7 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
     await ref.read(publishFreightProvider.notifier).publish(
           title: _titleCtrl.text.trim(),
           description: _descCtrl.text.trim(),
-          zone: _zoneCtrl.text.trim(),
+          zone: _selectedBarrio!,
           contactPhone: _phoneCtrl.text.trim(),
           expiresInHours: _expiresHours,
         );
@@ -42,6 +44,7 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
   @override
   Widget build(BuildContext context) {
     final publishState = ref.watch(publishFreightProvider);
+    final barrios = argentinaZones[_selectedProvince] ?? [];
 
     ref.listen(publishFreightProvider, (_, next) {
       if (next == PublishState.success) {
@@ -82,6 +85,7 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 controller: _titleCtrl,
@@ -97,13 +101,32 @@ class _PublishFreightScreenState extends ConsumerState<PublishFreightScreen> {
                 validator: (v) =>
                     v == null || v.isEmpty ? 'Ingresá la descripción' : null,
               ),
+              const SizedBox(height: 16),
+              const Text('Zona del flete',
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(height: 8),
+              // Province selector
+              DropdownButtonFormField<String>(
+                value: _selectedProvince,
+                decoration: const InputDecoration(labelText: 'Provincia / Región'),
+                items: argentinaZones.keys
+                    .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                    .toList(),
+                onChanged: (v) => setState(() {
+                  _selectedProvince = v!;
+                  _selectedBarrio = null;
+                }),
+              ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _zoneCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Zona / Barrio *'),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Ingresá la zona' : null,
+              // Barrio selector
+              DropdownButtonFormField<String>(
+                value: _selectedBarrio,
+                decoration: const InputDecoration(labelText: 'Barrio / Localidad *'),
+                items: barrios
+                    .map((b) => DropdownMenuItem(value: b, child: Text(b)))
+                    .toList(),
+                onChanged: (v) => setState(() => _selectedBarrio = v),
+                validator: (v) => v == null ? 'Seleccioná un barrio' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(

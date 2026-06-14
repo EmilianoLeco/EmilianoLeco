@@ -8,6 +8,7 @@ import '../location/location_service.dart';
 import 'map_controller.dart';
 import 'widgets/freight_bottom_sheet.dart';
 import 'widgets/radius_filter_dropdown.dart';
+import 'widgets/zone_filter_sheet.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -46,8 +47,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void _onMapCreated(GoogleMapController c) {
     _mapController = c;
     ref.read(userLocationProvider.future).then((gp) {
-      if (gp == null || _mapController == null) return;
-      _mapController!.animateCamera(
+      _mapController?.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(gp.geopoint.latitude, gp.geopoint.longitude),
         ),
@@ -55,10 +55,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     });
   }
 
+  void _openZoneFilter() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => const ZoneFilterSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final freightsAsync = ref.watch(nearbyFreightProvider);
     final selected = ref.watch(selectedFreightProvider);
+    final activeZone = ref.watch(zoneFilterProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,9 +79,33 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         foregroundColor: Colors.white,
         actions: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: 4),
             child: RadiusFilterDropdown(),
           ),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.location_city),
+                tooltip: 'Filtrar por zona',
+                onPressed: _openZoneFilter,
+              ),
+              if (activeZone != null)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.amber,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 4),
         ],
       ),
       body: Stack(
@@ -88,6 +124,23 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('Error: $e')),
           ),
+          if (activeZone != null)
+            Positioned(
+              top: 8,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Chip(
+                  avatar: const Icon(Icons.location_on, size: 16),
+                  label: Text(activeZone),
+                  deleteIcon: const Icon(Icons.close, size: 16),
+                  onDeleted: () =>
+                      ref.read(zoneFilterProvider.notifier).state = null,
+                  backgroundColor: Colors.white,
+                  elevation: 4,
+                ),
+              ),
+            ),
           if (selected != null)
             Align(
               alignment: Alignment.bottomCenter,

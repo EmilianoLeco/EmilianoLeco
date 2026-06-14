@@ -22,10 +22,6 @@ class PublishNotifier extends Notifier<PublishState> {
     state = PublishState.loading;
     try {
       final geoPoint = await LocationService.instance.currentGeoFirePoint();
-      if (geoPoint == null) {
-        state = PublishState.locationError;
-        return;
-      }
 
       final now = DateTime.now();
       final freight = Freight(

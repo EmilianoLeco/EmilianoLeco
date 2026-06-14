@@ -7,21 +7,22 @@ final radiusProvider = StateProvider<double>((ref) => 10.0);
 
 final statusFilterProvider = StateProvider<String?>((ref) => null);
 
+final zoneFilterProvider = StateProvider<String?>((ref) => null);
+
 final nearbyFreightProvider = StreamProvider<List<Freight>>((ref) {
   final locationAsync = ref.watch(userLocationProvider);
   final radiusKm = ref.watch(radiusProvider);
   final statusFilter = ref.watch(statusFilterProvider);
+  final zoneFilter = ref.watch(zoneFilterProvider);
   final service = ref.watch(firestoreServiceProvider);
 
   return locationAsync.when(
-    data: (geoPoint) {
-      if (geoPoint == null) return const Stream.empty();
-      return service.nearbyStream(
-        center: geoPoint,
-        radiusKm: radiusKm,
-        statusFilter: statusFilter,
-      );
-    },
+    data: (geoPoint) => service.nearbyStream(
+      center: geoPoint,
+      radiusKm: radiusKm,
+      statusFilter: statusFilter,
+      zoneFilter: zoneFilter,
+    ),
     loading: () => const Stream.empty(),
     error: (_, __) => const Stream.empty(),
   );
