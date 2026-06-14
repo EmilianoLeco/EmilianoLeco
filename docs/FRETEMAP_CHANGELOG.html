@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FRETEMAP_CHANGELOG.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="fretemap--changelog--roadmap-mvp">FreteMap — Changelog &amp; Roadmap MVP</h1>
+<p><strong>App:</strong> FreteMap — Localizador de fletes en tiempo real por zona<br>
+<strong>Stack:</strong> Flutter 3.44 · Firebase Firestore · Google Maps · Riverpod<br>
+<strong>Paquete:</strong> <code>com.fretemap.app</code><br>
+<strong>Repositorio:</strong> github.com/EmilianoLeco/EmilianoLeco<br>
+<strong>Fecha del documento:</strong> Junio 2026</p>
+<hr>
+<h2 id="versión-actual-v020-alpha">Versión actual: v0.2.0-alpha</h2>
+<hr>
+<h2 id="historial-de-versiones">Historial de versiones</h2>
+<h3 id="v010-alpha--scaffold-inicial">v0.1.0-alpha — Scaffold inicial</h3>
+<p><strong>Fecha:</strong> Junio 2026</p>
+<p>Primera versión funcional de la app. Se construyó la base completa del proyecto desde cero.</p>
+<p><strong>Lo que se construyó:</strong></p>
+<ul>
+<li>Estructura de proyecto Flutter con arquitectura feature-first</li>
+<li>Modelo de datos <code>Freight</code> con campos: título, descripción, ubicación (geopoint + geohash), zona, estado, teléfono, fechas</li>
+<li>Mapa de Google Maps centrado en Buenos Aires con marcadores de colores según estado del flete:
+<ul>
+<li>Verde → disponible</li>
+<li>Naranja → asignado</li>
+<li>Celeste → completado</li>
+</ul>
+</li>
+<li>Stream en tiempo real desde Firestore usando <code>geoflutterfire_plus</code> con consultas geográficas por radio</li>
+<li>Formulario para publicar un flete con validaciones</li>
+<li>Filtro de radio (5 / 10 / 25 km) en el AppBar</li>
+<li>Permisos de ubicación (GPS) manejados en runtime</li>
+<li>API key de Google Maps inyectada via <code>manifestPlaceholders</code> (nunca hardcodeada en el código)</li>
+<li>Reglas de Firestore básicas para v1 sin autenticación</li>
+</ul>
+<p><strong>Problemas resueltos durante esta versión:</strong></p>
+<ul>
+<li>Migración del sistema de plugins de Gradle al declarativo (requerido por Flutter 3.44)</li>
+<li>Incompatibilidad entre AGP 8.11.1 + Kotlin 2.2.20 + compileSdk 36</li>
+<li>Error de tipo Dart: <code>geoflutterfire_plus</code> retorna <code>Stream&lt;List&lt;DocumentSnapshot&lt;T&gt;&gt;&gt;</code>, no <code>Stream&lt;List&lt;T&gt;&gt;</code></li>
+<li>Conflicto de metadatos entre kotlin-stdlib 2.3.x y compilador Kotlin 2.0.0 (resuelto con plugin externo)</li>
+</ul>
+<hr>
+<h3 id="v020-alpha--zonas-de-argentina--fallback-de-ubicación">v0.2.0-alpha — Zonas de Argentina + fallback de ubicación</h3>
+<p><strong>Fecha:</strong> Junio 2026</p>
+<p><strong>Cambios:</strong></p>
+<ul>
+<li><strong>Fallback de ubicación a Buenos Aires:</strong> si el GPS no está disponible o el permiso es denegado, el mapa centra automáticamente en el centro de CABA (-34.6037, -58.3816) en lugar de mostrar pantalla en blanco</li>
+<li><strong>Filtro de zona por provincia/barrio:</strong> botón en el AppBar abre un bottom sheet con:
+<ul>
+<li>Chips de provincia/región (CABA, GBA Norte, GBA Sur, GBA Oeste, Córdoba, Rosario, Mendoza, Tucumán, Santa Fe, Salta)</li>
+<li>Lista de barrios/localidades por provincia seleccionada</li>
+<li>Chip flotante sobre el mapa indicando el filtro activo, con botón para limpiar</li>
+</ul>
+</li>
+<li><strong>Formulario de publicar mejorado:</strong> el campo &quot;Zona&quot; ahora es un doble dropdown Provincia → Barrio (en lugar de texto libre), asegurando consistencia con el filtro del mapa</li>
+<li><strong>Filtrado cliente-side por zona</strong> agregado al stream de Firestore (sin índice compuesto adicional)</li>
+<li><strong>API key de Maps movida a <code>local.properties</code>:</strong> la clave real nunca se commitea al repositorio</li>
+<li><strong>Reglas de Firestore simplificadas</strong> a <code>allow read, write: if true</code> para v1 sin auth</li>
+</ul>
+<p><strong>Archivos clave modificados:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Archivo</th>
+<th>Cambio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lib/core/constants/argentina_zones.dart</code></td>
+<td>Nuevo — datos de zonas</td>
+</tr>
+<tr>
+<td><code>lib/features/location/location_service.dart</code></td>
+<td>Fallback a BA</td>
+</tr>
+<tr>
+<td><code>lib/features/map/map_controller.dart</code></td>
+<td><code>zoneFilterProvider</code></td>
+</tr>
+<tr>
+<td><code>lib/features/map/map_screen.dart</code></td>
+<td>Botón de filtro + chip activo</td>
+</tr>
+<tr>
+<td><code>lib/features/map/widgets/zone_filter_sheet.dart</code></td>
+<td>Nuevo — selector de zona</td>
+</tr>
+<tr>
+<td><code>lib/features/freight/publish_freight_screen.dart</code></td>
+<td>Dropdown provincia/barrio</td>
+</tr>
+<tr>
+<td><code>lib/core/services/firestore_service.dart</code></td>
+<td>Parámetro <code>zoneFilter</code></td>
+</tr>
+<tr>
+<td><code>android/app/build.gradle</code></td>
+<td>Lee API key desde <code>local.properties</code></td>
+</tr>
+<tr>
+<td><code>firestore.rules</code></td>
+<td>Reglas abiertas para v1</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="arquitectura-actual">Arquitectura actual</h2>
+<pre class="hljs"><code><div>lib/
+├── core/
+│   ├── constants/
+│   │   ├── app_colors.dart         # Paleta de colores
+│   │   └── argentina_zones.dart    # Provincias y barrios
+│   ├── models/
+│   │   └── freight.dart            # Modelo de datos + Firestore serialization
+│   └── services/
+│       └── firestore_service.dart  # Geo-queries y CRUD
+├── features/
+│   ├── freight/
+│   │   ├── publish_freight_controller.dart   # Notifier de publicación
+│   │   └── publish_freight_screen.dart       # Formulario
+│   ├── location/
+│   │   └── location_service.dart             # GPS + fallback BA
+│   └── map/
+│       ├── map_controller.dart               # Providers Riverpod
+│       ├── map_screen.dart                   # Pantalla principal
+│       └── widgets/
+│           ├── freight_bottom_sheet.dart     # Detalle del flete
+│           ├── radius_filter_dropdown.dart   # Filtro de radio
+│           └── zone_filter_sheet.dart        # Filtro de zona
+└── main.dart / app.dart
+</div></code></pre>
+<p><strong>Providers Riverpod activos:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>userLocationProvider</code></td>
+<td><code>FutureProvider&lt;GeoFirePoint&gt;</code></td>
+<td>Ubicación del usuario (fallback BA)</td>
+</tr>
+<tr>
+<td><code>radiusProvider</code></td>
+<td><code>StateProvider&lt;double&gt;</code></td>
+<td>Radio de búsqueda en km</td>
+</tr>
+<tr>
+<td><code>statusFilterProvider</code></td>
+<td><code>StateProvider&lt;String?&gt;</code></td>
+<td>Filtro por estado del flete</td>
+</tr>
+<tr>
+<td><code>zoneFilterProvider</code></td>
+<td><code>StateProvider&lt;String?&gt;</code></td>
+<td>Filtro por barrio</td>
+</tr>
+<tr>
+<td><code>nearbyFreightProvider</code></td>
+<td><code>StreamProvider&lt;List&lt;Freight&gt;&gt;</code></td>
+<td>Stream de fletes cercanos</td>
+</tr>
+<tr>
+<td><code>selectedFreightProvider</code></td>
+<td><code>StateProvider&lt;Freight?&gt;</code></td>
+<td>Flete seleccionado en mapa</td>
+</tr>
+<tr>
+<td><code>publishFreightProvider</code></td>
+<td><code>NotifierProvider</code></td>
+<td>Estado de publicación</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="limitaciones-conocidas-v020-alpha">Limitaciones conocidas (v0.2.0-alpha)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Limitación</th>
+<th>Impacto</th>
+<th>Solución planificada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Sin autenticación</td>
+<td>Cualquiera puede publicar</td>
+<td>v0.4.0 — Firebase Auth</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Reglas Firestore abiertas</td>
+<td>Sin seguridad en producción</td>
+<td>v0.4.0 — Reglas con auth</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Maps en blanco en emulador API 36</td>
+<td>Solo en emulador x86_64 Android 16</td>
+<td>Usar AVD API 33/34 o dispositivo físico</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Zona solo filtra coincidencia exacta</td>
+<td>Si el barrio se escribe diferente, no matchea</td>
+<td>Resuelto — ambos usan el mismo dropdown</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Sin paginación en el mapa</td>
+<td>Con muchos fletes puede haber lag</td>
+<td>v0.6.0 — clustering de marcadores</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Sin notificaciones push</td>
+<td>El usuario no sabe si llega un flete</td>
+<td>v0.5.0 — Firebase Cloud Messaging</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sin foto o descripción enriquecida</td>
+<td>Flete solo tiene texto</td>
+<td>v0.6.0 — Firebase Storage</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="roadmap-mvp--2-meses">Roadmap MVP — 2 meses</h2>
+<p><strong>Objetivo:</strong> Tener una app funcional, segura y publicable en Google Play con las funciones mínimas para conectar fleteros con clientes.</p>
+<hr>
+<h3 id="semana-12--v030--estabilización-y-ux-básica">Semana 1–2 · v0.3.0 — Estabilización y UX básica</h3>
+<p><strong>Objetivo:</strong> App usable en dispositivo real, sin bugs críticos.</p>
+<ul>
+<li><input type="checkbox" id="checkbox0"><label for="checkbox0">Probar en dispositivo Android físico (resolver problema de emulador API 36)</label></li>
+<li><input type="checkbox" id="checkbox1"><label for="checkbox1">Pantalla de splash y onboarding de 2 pasos (¿sos fletero o cliente?)</label></li>
+<li><input type="checkbox" id="checkbox2"><label for="checkbox2">Manejo de errores visible al usuario (sin Firestore, sin GPS, sin internet)</label></li>
+<li><input type="checkbox" id="checkbox3"><label for="checkbox3">Pull-to-refresh en el mapa</label></li>
+<li><input type="checkbox" id="checkbox4"><label for="checkbox4">Validar que el flete publicado aparece en el mapa en tiempo real</label></li>
+</ul>
+<hr>
+<h3 id="semana-34--v040--autenticación">Semana 3–4 · v0.4.0 — Autenticación</h3>
+<p><strong>Objetivo:</strong> Saber quién publica cada flete.</p>
+<ul>
+<li><input type="checkbox" id="checkbox5"><label for="checkbox5">Firebase Auth con número de teléfono (SMS OTP) — común en apps de logística</label></li>
+<li><input type="checkbox" id="checkbox6"><label for="checkbox6">Pantalla de login/verificación SMS</label></li>
+<li><input type="checkbox" id="checkbox7"><label for="checkbox7">Guardar nombre y teléfono del usuario en Firestore al registrarse</label></li>
+<li><input type="checkbox" id="checkbox8"><label for="checkbox8">Asociar cada flete al <code>uid</code> del usuario que lo publica</label></li>
+<li><input type="checkbox" id="checkbox9"><label for="checkbox9">Actualizar reglas de Firestore: solo el dueño puede editar/borrar su flete</label></li>
+<li><input type="checkbox" id="checkbox10"><label for="checkbox10">&quot;Mis fletes publicados&quot; — lista en perfil</label></li>
+</ul>
+<hr>
+<h3 id="semana-56--v050--gestión-del-flete">Semana 5–6 · v0.5.0 — Gestión del flete</h3>
+<p><strong>Objetivo:</strong> Cerrar el ciclo de un flete (publicar → contactar → asignar → completar).</p>
+<ul>
+<li><input type="checkbox" id="checkbox11"><label for="checkbox11">Botón &quot;Me interesa&quot; en el bottom sheet del flete (abre WhatsApp con número del publicador)</label></li>
+<li><input type="checkbox" id="checkbox12"><label for="checkbox12">El publicador puede cambiar el estado del flete: disponible → asignado → completado</label></li>
+<li><input type="checkbox" id="checkbox13"><label for="checkbox13">Fletes expirados se ocultan automáticamente del mapa (basado en <code>expiresAt</code>)</label></li>
+<li><input type="checkbox" id="checkbox14"><label for="checkbox14">Página de detalle completo del flete (expandir desde el bottom sheet)</label></li>
+</ul>
+<hr>
+<h3 id="semana-78--v060--notificaciones-y-pulido">Semana 7–8 · v0.6.0 — Notificaciones y pulido</h3>
+<p><strong>Objetivo:</strong> Retención de usuarios y experiencia lista para producción.</p>
+<ul>
+<li><input type="checkbox" id="checkbox15"><label for="checkbox15">Firebase Cloud Messaging (FCM): notificación cuando aparece un flete nuevo en tu zona guardada</label></li>
+<li><input type="checkbox" id="checkbox16"><label for="checkbox16">Guardar &quot;zona favorita&quot; del usuario para recibir alertas</label></li>
+<li><input type="checkbox" id="checkbox17"><label for="checkbox17">Clustering de marcadores en el mapa cuando hay muchos fletes juntos</label></li>
+<li><input type="checkbox" id="checkbox18"><label for="checkbox18">Dark mode</label></li>
+<li><input type="checkbox" id="checkbox19"><label for="checkbox19">Icono de app y nombre definitivo</label></li>
+<li><input type="checkbox" id="checkbox20"><label for="checkbox20">Reglas de Firestore en producción (con rate limiting)</label></li>
+</ul>
+<hr>
+<h3 id="semana-9--v100--lanzamiento">Semana 9 · v1.0.0 — Lanzamiento</h3>
+<p><strong>Objetivo:</strong> Publicar en Google Play.</p>
+<ul>
+<li><input type="checkbox" id="checkbox21"><label for="checkbox21">Generar keystore de producción y firmado de APK</label></li>
+<li><input type="checkbox" id="checkbox22"><label for="checkbox22">Crear cuenta de desarrollador en Google Play Console (u$s 25 único pago)</label></li>
+<li><input type="checkbox" id="checkbox23"><label for="checkbox23">Screenshots y descripción para el store</label></li>
+<li><input type="checkbox" id="checkbox24"><label for="checkbox24">Política de privacidad (requerida por Google Play)</label></li>
+<li><input type="checkbox" id="checkbox25"><label for="checkbox25">Release en modo &quot;prueba interna&quot; con usuarios reales</label></li>
+<li><input type="checkbox" id="checkbox26"><label for="checkbox26">Monitoreo de crashes con Firebase Crashlytics</label></li>
+</ul>
+<hr>
+<h2 id="buenas-prácticas-a-mantener">Buenas prácticas a mantener</h2>
+<h3 id="seguridad">Seguridad</h3>
+<ul>
+<li>La API key de Google Maps se lee siempre desde <code>local.properties</code> (gitignoreado), nunca se commitea</li>
+<li><code>google-services.json</code> está en <code>.gitignore</code></li>
+<li>En producción, las reglas de Firestore deben validar <code>request.auth != null</code></li>
+</ul>
+<h3 id="código">Código</h3>
+<ul>
+<li>Arquitectura feature-first: cada pantalla tiene su propio controller, screen y widgets</li>
+<li>State management con Riverpod: providers declarativos, sin setState innecesario</li>
+<li>Filtros cliente-side en v1 para evitar índices compuestos; migrar a server-side cuando el volumen lo requiera</li>
+</ul>
+<h3 id="android--build">Android / Build</h3>
+<ul>
+<li>AGP 8.11.1 + Kotlin 2.2.20 + compileSdk 36 — no bajar estas versiones</li>
+<li>Kotlin como plugin externo (<code>org.jetbrains.kotlin.android</code>) — no usar <code>builtInKotlin</code></li>
+<li>Gradle wrapper: 8.14.1</li>
+</ul>
+<h3 id="firebase">Firebase</h3>
+<ul>
+<li>Firestore: estructura flat (<code>/freights/{id}</code>) con campo <code>location: { geopoint, geohash }</code> — requerido por geoflutterfire_plus</li>
+<li>Reglas abiertas SOLO en desarrollo; cerrar antes del primer usuario real</li>
+</ul>
+<hr>
+<h2 id="cómo-convertir-este-documento-a-pdf">Cómo convertir este documento a PDF</h2>
+<p><strong>Opción A — VS Code (recomendado):</strong></p>
+<ol>
+<li>Instalar extensión &quot;Markdown PDF&quot; (autor: yzane)</li>
+<li>Click derecho sobre este archivo → &quot;Markdown PDF: Export (pdf)&quot;</li>
+</ol>
+<p><strong>Opción B — Chrome:</strong></p>
+<ol>
+<li>Abrir el archivo <code>.md</code> en un visor web (como GitHub)</li>
+<li>Ctrl+P → Guardar como PDF</li>
+</ol>
+<hr>
+<p><em>Documento generado automáticamente · FreteMap v0.2.0-alpha · Junio 2026</em></p>
+
+</body>
+</html>
