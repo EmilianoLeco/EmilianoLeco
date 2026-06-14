@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../map_controller.dart';
 
@@ -64,20 +65,49 @@ class FreightBottomSheet extends ConsumerWidget {
               text: 'Vence: ${fmt.format(freight.expiresAt)}',
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.phone),
-                label: const Text('Contactar'),
-                onPressed: () {
-                  // TODO v2: launch phone dialler via url_launcher
-                },
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.chat, size: 18),
+                    label: const Text('WhatsApp'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366),
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => _contactWhatsApp(freight.contactPhone),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.phone, size: 18),
+                  label: const Text('Llamar'),
+                  onPressed: () => _callPhone(freight.contactPhone),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _contactWhatsApp(String phone) async {
+    final cleaned = phone.replaceAll(RegExp(r'\D'), '');
+    final number = cleaned.startsWith('54') ? cleaned : '54$cleaned';
+    final uri = Uri.parse(
+      'https://wa.me/$number?text=${Uri.encodeComponent('Hola, vi tu flete en FreteMap. ¿Está disponible?')}',
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> _callPhone(String phone) async {
+    final uri = Uri.parse('tel:${phone.replaceAll(RegExp(r'\D'), '')}');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    }
   }
 }
 

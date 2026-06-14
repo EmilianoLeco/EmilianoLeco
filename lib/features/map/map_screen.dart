@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/models/freight.dart';
+import '../../core/providers/connectivity_provider.dart';
 import '../freight/publish_freight_screen.dart';
 import '../location/location_service.dart';
 import 'map_controller.dart';
@@ -66,11 +67,17 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    ref.invalidate(userLocationProvider);
+    ref.invalidate(nearbyFreightProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     final freightsAsync = ref.watch(nearbyFreightProvider);
     final selected = ref.watch(selectedFreightProvider);
     final activeZone = ref.watch(zoneFilterProvider);
+    final isOnline = ref.watch(connectivityProvider).valueOrNull ?? true;
 
     return Scaffold(
       appBar: AppBar(
@@ -108,50 +115,71 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           const SizedBox(width: 4),
         ],
       ),
-      body: Stack(
+      body: Column(
         children: [
-          freightsAsync.when(
-            data: (freights) => GoogleMap(
-              initialCameraPosition: _defaultPosition,
-              onMapCreated: _onMapCreated,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              markers: _buildMarkers(freights),
-              onTap: (_) =>
-                  ref.read(selectedFreightProvider.notifier).state = null,
+          if (!isOnline)
+            MaterialBanner(
+              content: const Text('Sin conexión — los fletes pueden estar desactualizados'),
+              backgroundColor: Colors.orange[100],
+              leading: const Icon(Icons.wifi_off, color: Colors.orange),
+              actions: [
+                TextButton(
+                  onPressed: _onRefresh,
+                  child: const Text('Reintentar'),
+                ),
+              ],
             ),
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Error: $e')),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: Stack(
+                children: [
+                  freightsAsync.when(
+                    data: (freights) => GoogleMap(
+                      initialCameraPosition: _defaultPosition,
+                      onMapCreated: _onMapCreated,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      markers: _buildMarkers(freights),
+                      onTap: (_) =>
+                          ref.read(selectedFreightProvider.notifier).state = null,
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => _MapError(onRetry: _onRefresh),
+                  ),
+                  if (activeZone != null)
+                    Positioned(
+                      top: 8,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Chip(
+                          avatar: const Icon(Icons.location_on, size: 16),
+                          label: Text(activeZone),
+                          deleteIcon: const Icon(Icons.close, size: 16),
+                          onDeleted: () =>
+                              ref.read(zoneFilterProvider.notifier).state = null,
+                          backgroundColor: Colors.white,
+                          elevation: 4,
+                        ),
+                      ),
+                    ),
+                  if (selected != null)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Material(
+                        elevation: 8,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
+                        child: const FreightBottomSheet(),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-          if (activeZone != null)
-            Positioned(
-              top: 8,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Chip(
-                  avatar: const Icon(Icons.location_on, size: 16),
-                  label: Text(activeZone),
-                  deleteIcon: const Icon(Icons.close, size: 16),
-                  onDeleted: () =>
-                      ref.read(zoneFilterProvider.notifier).state = null,
-                  backgroundColor: Colors.white,
-                  elevation: 4,
-                ),
-              ),
-            ),
-          if (selected != null)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Material(
-                elevation: 8,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-                child: const FreightBottomSheet(),
-              ),
-            ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -172,5 +200,43 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   void dispose() {
     _mapController?.dispose();
     super.dispose();
+  }
+}
+
+class _MapError extends StatelessWidget {
+  const _MapError({required this.onRetry});
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.cloud_off, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'No se pudieron cargar los fletes',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Verificá tu conexión e intentá de nuevo.',
+              style: TextStyle(color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Reintentar'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
